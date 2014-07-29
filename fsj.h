@@ -9,6 +9,6 @@
 #define FSJ_H_
 
 extern int fsj_split(char *file_path, int peices);
-extern int fsj_join(char *file_path);
+extern int fsj_join(char *file_path, char *out_file);
 
 #endif /* FSJ_H_ */

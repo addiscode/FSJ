@@ -51,16 +51,14 @@ int fsj_split(char *file_path, int peices) {
 			if ((max_ftell - ftell(fh)) < BUFFER_SIZE)
 				bf_size = max_ftell - ftell(fh);
 
-			if (bf_size != BUFFER_SIZE)
-				printf("BUFFER SIZE: %d\n", bf_size);
+//			if (bf_size != BUFFER_SIZE)
+//				printf("BUFFER SIZE: %d\n", bf_size);
 
 		}
 
 		fclose(fp);
 		printf("peice_name: %s\n", p_name);
 	}
-
-//	printf("File size: %d\n", stbuf.st_size);
 
 	free(buffer);
 	free(p_name);
@@ -73,14 +71,17 @@ int fsj_split(char *file_path, int peices) {
 		return 0;
 }
 
-int fsj_join(char *file_path) {
+int fsj_join(char *file_path, char *out_filename) {
 
 	long buf_size;
 	char *p_name = malloc(NAME_SIZE);
 	char *mf_name = malloc(NAME_SIZE);
 	void *buffer = malloc(BUFFER_SIZE);
 
-	sprintf(mf_name, "%s-hfj", file_path);
+	if(strcmp(out_filename, "") == 0)
+		sprintf(mf_name, "%s-hfj", file_path);
+	else
+		strcpy(mf_name, out_filename);
 
 	log_info("Joining files to: %s", mf_name);
 	FILE *fh = fopen(mf_name, "wb");
@@ -102,7 +103,7 @@ int fsj_join(char *file_path) {
 
 			if ((stbuf.st_size - ftell(fp)) < BUFFER_SIZE) {
 				buf_size = stbuf.st_size - ftell(fp);
-				printf("BUFFER SIZE: %d\n", buf_size);
+//				printf("BUFFER SIZE: %d\n", buf_size);
 			}
 
 		}
@@ -112,6 +113,11 @@ int fsj_join(char *file_path) {
 		fclose(fp);
 
 	}
+
+	if(i>0)
+		log_info("done joining %d files to %s", i, mf_name);
+	else
+		log_info("Failed to find peices");
 
 	free(p_name);
 	free(mf_name);

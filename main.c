@@ -26,9 +26,16 @@ int main(int argc, char **argv) {
 		check(argc >= 4, "Invalid command");
 
 		peices = atoi(argv[3]);
+		check(peices>1, "peices must be greater than one");
+
 		fsj_split(argv[2], peices);
 	} else if (strcmp(argv[1], "-j") == 0) {
-		fsj_join(argv[2]);
+
+		char *out_filename = "";
+		if(argc>4 && strcmp(argv[3], "-o") == 0)
+			out_filename = argv[4];
+
+		fsj_join(argv[2], out_filename);
 	}
 
 	return 0;
