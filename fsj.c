@@ -12,11 +12,13 @@
 #include "dbg.h"
 
 #define BUFFER_SIZE 8096
+#define NAME_SIZE 100
+
 
 int fsj_split(char *file_path, int peices) {
 	printf("Split file to : %d peices\n", peices);
 	void *buffer = malloc(BUFFER_SIZE);
-	char *p_name = malloc(60);
+	char *p_name = malloc(NAME_SIZE);
 
 	FILE *fh = fopen(file_path, "rb");
 
@@ -74,8 +76,8 @@ int fsj_split(char *file_path, int peices) {
 int fsj_join(char *file_path) {
 
 	long buf_size;
-	char *p_name = malloc(60);
-	char *mf_name = malloc(60);
+	char *p_name = malloc(NAME_SIZE);
+	char *mf_name = malloc(NAME_SIZE);
 	void *buffer = malloc(BUFFER_SIZE);
 
 	sprintf(mf_name, "%s-hfj", file_path);
@@ -92,7 +94,7 @@ int fsj_join(char *file_path) {
 		buf_size = BUFFER_SIZE;
 		log_info("Peice: %s", p_name);
 
-		int stat_rs = stat(p_name, &stbuf);
+		//don't need to check here checked in the main while loop above ^
 		FILE *fp = fopen(p_name, "rb");
 
 		while (fread(buffer, buf_size, 1, fp)) {
