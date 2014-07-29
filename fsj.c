@@ -13,23 +13,20 @@
 
 #define BUFFER_SIZE 8096
 
-
 int fsj_split(char *file_path, int peices) {
 	printf("Split file to : %d peices\n", peices);
-	FILE *fh = fopen(file_path, "rb");
-
 	void *buffer = malloc(BUFFER_SIZE);
+	char *p_name = malloc(60);
+
+	FILE *fh = fopen(file_path, "rb");
 
 	struct stat stbuf;
 
-	int stat_rs = stat(file_path, &stbuf);
-
-	check(stat_rs != -1, "Failed to get stat");
+	check(stat(file_path, &stbuf) != -1, "Failed to get stat");
 
 	const double p_size = ceil(stbuf.st_size / peices);
 
 	int i = 0;
-	char *p_name = malloc(60);
 
 	long cur_pos = 0;
 	long bf_size;
@@ -45,6 +42,7 @@ int fsj_split(char *file_path, int peices) {
 		cur_pos = ftell(fh);
 
 		FILE *fp = fopen(p_name, "wb");
+		check(fp, "Failed to open out file stream to : %s", p_name);
 
 		while (ftell(fh) <= max_ftell && fread(buffer, bf_size, 1, fh)) {
 			fwrite(buffer, bf_size, 1, fp);
@@ -60,30 +58,34 @@ int fsj_split(char *file_path, int peices) {
 		printf("peice_name: %s\n", p_name);
 	}
 
-	printf("File size: %d\n", stbuf.st_size);
+//	printf("File size: %d\n", stbuf.st_size);
 
 	free(buffer);
+	free(p_name);
 	fclose(fh);
-	return 0;
+	return 1;
 
-	error: return 0;
+	error:
+		free(buffer);
+		free(p_name);
+		return 0;
 }
 
 int fsj_join(char *file_path) {
-	int peices = 3, i = 0;
+
 	long buf_size;
 	char *p_name = malloc(60);
 	char *mf_name = malloc(60);
+	void *buffer = malloc(BUFFER_SIZE);
 
 	sprintf(mf_name, "%s-hfj", file_path);
 
 	log_info("Joining files to: %s", mf_name);
 	FILE *fh = fopen(mf_name, "wb");
 
-	void *buffer = malloc(BUFFER_SIZE);
 	struct stat stbuf;
-	int stat_rs;
 
+	int i = 0;
 	sprintf(p_name, "%s.%d", file_path, i);
 	while (stat(p_name, &stbuf) != -1) {
 
@@ -113,8 +115,11 @@ int fsj_join(char *file_path) {
 	free(mf_name);
 	free(buffer);
 	fclose(fh);
-	return 0;
+	return 1;
 
-	error: return 0;
-	return 0;
+	error:
+		free(p_name);
+		free(mf_name);
+		free(buffer);
+		return 0;
 }
