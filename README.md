@@ -14,3 +14,7 @@ split file x.mp4 to 5 peices
 join x.mp4 peices
 
 ./fsj -j x.mp4
+
+or
+
+./fsj -j x.mp4 new_name.mp4
