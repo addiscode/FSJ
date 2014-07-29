@@ -21,10 +21,12 @@ void print_usage() {
 int main(int argc, char **argv) {
 	check(argc >= 3, "Invalid command %d arguments supplied", argc);
 
+	int peices;
 	if (strcmp(argv[1], "-s") == 0) {
 		check(argc >= 4, "Invalid command");
 
-		fsj_split(argv[2], 3);
+		peices = atoi(argv[3]);
+		fsj_split(argv[2], peices);
 	} else if (strcmp(argv[1], "-j") == 0) {
 		fsj_join(argv[2]);
 	}

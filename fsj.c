@@ -82,14 +82,15 @@ int fsj_join(char *file_path) {
 
 	void *buffer = malloc(BUFFER_SIZE);
 	struct stat stbuf;
-	for (; i < peices; i++) {
+	int stat_rs;
+
+	sprintf(p_name, "%s.%d", file_path, i);
+	while (stat(p_name, &stbuf) != -1) {
+
 		buf_size = BUFFER_SIZE;
-		sprintf(p_name, "%s.%d", file_path, i);
 		log_info("Peice: %s", p_name);
 
 		int stat_rs = stat(p_name, &stbuf);
-		check(stat_rs != -1, "Failed to get stat");
-
 		FILE *fp = fopen(p_name, "rb");
 
 		while (fread(buffer, buf_size, 1, fp)) {
@@ -100,9 +101,10 @@ int fsj_join(char *file_path) {
 				printf("BUFFER SIZE: %d\n", buf_size);
 			}
 
-//			log_info("file_size: %d cur_pos: %d", stbuf.st_size, ftell(fp));
 		}
 
+		i++;
+		sprintf(p_name, "%s.%d", file_path, i);
 		fclose(fp);
 
 	}
