@@ -17,4 +17,4 @@ join x.mp4 peices
 
 or
 
-./fsj -j x.mp4 new_name.mp4
+./fsj -j x.mp4 -o new_name.mp4
